@@ -27,59 +27,143 @@
     </ul>
   	
   	<div class="section pad-24 mtop-30">
-	<form action="signup.jsp" method="post">
+	<!-- form 형식 없앰 / required 속성 없앰 -->
 	<table align=center>
 	<tr><td colspan=3 align=center height=40 style="border-bottom:1px solid black"><b>회원가입</b></td></tr>
 	<tr>
 		<td align=right>가입 유형 &nbsp;</td>
-		<td> <input type="radio" name="userclass" value="판매자" checked> 판매자 </td>
-		<td> <input type="radio" name="userclass" value="구매자"> 구매자 </td>
+		<td> <input type="radio" id="userclass" name="userclass" value="판매자" checked> 판매자 </td>
+		<td> <input type="radio" id="userclass" name="userclass" value="구매자"> 구매자 </td>
 	</tr>
 	<tr>
 		<td align=right>아이디 &nbsp;</td>
-		<td colspan=2> <input type="text" name="id" placeholder="ID를 입력하세요" required> </td>
+		<td colspan=2> <input type="text" id="id" name="id" placeholder="ID를 입력하세요"> </td>
 	</tr>
 	
 	<tr>
 		<td align=right>패스워드 &nbsp;</td>
-		<td colspan=2> <input type="password" name="pw" required> </td>
+		<td colspan=2> <input type="password" id="pw" name="pw"> </td>
 	</tr>
 	
 	<tr>
 		<td align=right>패스워드 확인 &nbsp;</td>
-		<td colspan=2> <input type="password" name="pw2" placeholder="비밀번호를 다시 입력하세요" required> </td>
+		<td colspan=2> <input type="password" id="pw2" name="pw2" placeholder="비밀번호를 다시 입력하세요"> </td>
 	</tr>
 	
 	<tr>
 		<td align=right>이름 &nbsp;</td>
-		<td colspan=2> <input type="text" name="name" required> </td>
+		<td colspan=2> <input type="text" id="name" name="name"> </td>
 	</tr>
 	
 	<tr>
 		<td align=right>성별 &nbsp;</td>
-		<td> <input type="radio" name="sex" value="male" checked>남성 </td>
-		<td> <input type="radio" name="sex" value="female"> 여성</td>
+		<td> <input type="radio" id="sex" name="sex" value="male" checked>남성 </td>
+		<td> <input type="radio" id="sex" name="sex" value="female"> 여성</td>
 	</tr>
 	
 	<tr>
 		<td align=right>생년월일 &nbsp;</td>
-		<td colspan=2> <input type="date" name="birth" value=""> </td>
+		<td colspan=2> <input type="date" id="birth" name="birth" value=""> </td>
 	</tr>
 	
 	<tr>
 		<td align=right>전화번호 &nbsp;</td>
-		<td colspan=2> <input type="text" name="phonenum" placeholder="000-0000-0000" required> </td>
+		<td colspan=2> <input type="text" id="phonenum" name="phonenum" placeholder="000-0000-0000"> </td>
 	</tr>
 	
 	<tr>
 		<td colspan=3 align=center height=50>
-		<input type="submit" value="JOIN">
+		<input type="submit" value="JOIN" onclick="signup()">
 		</td>
 	</tr>
 	</table>
-	</form>
 	</div>
 	</div>
 	<div class="page-footer"> Copyright: Fiore.com, 2021 </div>
 </body>
 </html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function signup(){
+	
+	var userclass = $("#userclass").val().trim();
+	
+	var id = $("#id").val().trim();
+	if(id == ""){
+		alert("아이디를 입력해주세요.");
+		$("#id").focus();
+		return;
+	}
+	
+	var pw = $("#pw").val().trim();
+	if(pw == ""){
+		alert("패스워드를 입력해주세요.");
+		$("#pw").focus();
+		return;
+	}
+	
+	var pw2 = $("#pw2").val().trim();
+	if(pw2 == ""){
+		alert("패스워드(확인)을 입력해주세요.");
+		$("#pw2").focus();
+		return;
+	}
+	
+	var pw2 = $("#pw2").val().trim();
+	if(pw != pw2){
+		alert("입력된 두 개의 패스워드가 일치하지 않습니다.");
+		$("#pw2").focus();
+		return;
+	}
+	
+	var name = $("#name").val().trim();
+	if(name == ""){
+		alert("이름을 입력해주세요.");
+		$("#name").focus();
+		return;
+	}
+	
+	var sex = $("#sex").val().trim();	
+	
+	var birth = $("#birth").val().trim();
+	if(birth == ""){
+		alert("생년월일을 입력해주세요.");
+		$("#birth").focus();
+		return;
+	}
+	
+	var phonenum = $("#phonenum").val().trim();
+	if(phonenum == ""){
+		alert("전화번호를 입력해주세요.");
+		$("#phonenum").focus();
+		return;
+	}
+	
+	var usrobj = {userclass: userclass, id: id, password: pw, name: name, birth: birth, phonenum: phonenum, ts: getToday()};
+	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
+	
+	var url = "jsp/signup.jsp";
+	AJAX.call(url, params, function(data){
+		var code = data.trim();
+		if(code == "EX"){
+			alert("이미 존재하는 아이디입니다.");
+		}
+		else if(code == "ER"){
+			alert("회원가입 도중 오류가 발생하였습니다.");
+		}
+		else{
+			alert("회원가입 완료");
+			window.location.href = "main.html";
+		}
+	}, false);
+	
+	function getToday(){
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = ("0" + (1 + date.getMonth())).slice(-2);
+		var day = ("0" + date.getDate()).slice(-2);
+		return year + "-" + month + "-" + day;
+	}
+}
+</script>
