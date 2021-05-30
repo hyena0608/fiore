@@ -28,15 +28,67 @@
     
    	<div class="section pad-24 mtop-30">
 	<div><span class="p">원데이클래스</span> 소개</div><br>
-	<img src="C:\Users\hello\eclipse-workspace\Fiore\WebContent\image\onedayclass"><br>
+	<table id="list"></table>
+	<!-- <img src="C:\Users\hello\eclipse-workspace\Fiore\WebContent\image\onedayclass"><br>  
 	> 꽃가지를 활용한 꽃다발 만들기<br>
 	[삼육 꽃집]<br>
 	- 위치<br>
 	서울특별시 노원구 화랑로 815<br>
 	- 예약 가능 인원<br>
 	1-3명<br>
-	- 예약 문의<br> <!-- 메세지창 연결 및 위의 내용 관리자 연동 되게 변경 -->
+	- 예약 문의<br>  메세지창 연결 및 위의 내용 관리자 연동 되게 변경 -->
+	<div class="button" onclick="getNext()">작성글 더보기</div>
 	</div>
 	</div>
 </body>
 </html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function(){
+	Page.init(start);
+});
+
+var minNo = -1;
+function start(uid){
+	AJAX.call("jsp/feedGetGroup.jsp", null, function(data){
+		var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+		console.log(feeds);
+		if(feeds.length > 0){
+			minNo = feeds[feeds.length - 1].no;
+		}
+		show(feeds); 
+	});
+}
+
+function show(feeds){
+	var str = "";
+	for(var i=0; i<feeds.length; i++){
+		var img = feeds[i].images, imgstr = "";
+		if(img != null){
+			imgstr = "<img src='images/" + img + "'width=100%>";
+		}
+		str += "<tr><td colspan=2><hr></td></tr>";
+		str += "<tr>";
+		str += "<td>" + feeds[i].title + "</td>";
+		str += "<td>" + feeds[i].ts + "</td>";
+		str += "</tr>";
+		str += "<tr><td colspan=2>" + imgstr + "</td></tr>";
+		str += "<tr><td colspan=2>" + feeds[i].content + "</td></tr>";
+	}
+	$("#list").append(str); // <table id="list">에 들어가게 됨
+}
+
+function getNext(){
+	var params = {maxNo: minNo};
+	AJAX.call("jsp/feedGetGroup.jsp", params, function(data){
+		var feeds = JSON.parse(data.trim());
+		if (feeds.length > 0){
+			minNo = feeds[feeds.length - 1].no;
+		}else{
+			alert("더이상 작성글이 없습니다.");
+		}
+		show(feeds);
+	});
+}
+</script>

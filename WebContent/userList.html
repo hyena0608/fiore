@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0 text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/core.css">
+	<title>Fiore</title>
+</head>
+<body>
+	<div>
+		<table border="1" id="list"></table>
+	</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+	$(document).ready(function(){
+		MPage.init(start);
+	});
+	
+	function start(uid){
+		AJAX.call("jsp/userList.jsp", null, function(data){
+			var users = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+			show(users); 
+		});
+	}
+	
+	function show(users){
+		var str = "";
+		str += "<tr><td colspan=9 align=center>가입자 리스트</td></tr>";
+		str += "<tr>";
+		str += "<td>번호</td>";
+		str += "<td>구분</td>";
+		str += "<td>아이디</td>";
+		str += "<td>비밀번호</td>";
+		str += "<td>이름</td>";
+		str += "<td>성별</td>";
+		str += "<td>생년월일</td>";
+		str += "<td>전화번호</td>";
+		str += "<td>가입일자</td>";
+		str += "</tr>";
+		for(var i=0; i<users.length; i++){
+			str += "<tr>";
+			str += "<td>" + users[i].no + "</td>";
+			str += "<td>" + users[i].userclass + "</td>";
+			str += "<td>" + users[i].id + "</td>";
+			str += "<td>" + users[i].password + "</td>";
+			str += "<td>" + users[i].name + "</td>";
+			str += "<td>" + users[i].sex + "</td>";
+			str += "<td>" + users[i].birth + "</td>";
+			str += "<td>" + users[i].phonenum + "</td>";
+			str += "<td>&nbsp;" + users[i].ts + "</td>";
+			str += "</tr>";
+		}
+		$("#list").html(str); // <table id="list">에 들어가게 됨
+	}
+</script>	

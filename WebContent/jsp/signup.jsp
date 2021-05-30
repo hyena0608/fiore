@@ -14,7 +14,7 @@
 		return;
 	}
 	
-	if(dao.insert(uid, jsonstr) == true){
+	if(dao.signup(uid, jsonstr) == true){
 		session.setAttribute("id", uid);
 		out.print("OK");
 	}

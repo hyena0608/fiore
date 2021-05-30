@@ -29,11 +29,26 @@ var Page = {
 		AJAX.call("jsp/session.jsp", null, function(data){
 			var uid = data.trim();
 			if(uid == "null"){
-				alert("로그인이 필요한 서비스 입니다.");
-				window.location.href = "login.html";
+				alert("로그인이 필요한 서비스입니다.");
+				window.location.href = "mypage.html";
 			}
 			else{
 				if(cbfunc != null) cbfunc(uid);
+			}
+		});
+	},
+};
+
+var MPage = {
+	init: function(cbfunc){
+		AJAX.call("jsp/session.jsp", null, function(data){
+			var uid = data.trim();
+			if(uid == "fiore"){
+				if(cbfunc != null) cbfunc(uid);
+			}
+			else{
+				alert("관리자 로그인이 필요한 서비스입니다.");
+				window.location.href = "manager.html";
 			}
 		});
 	},

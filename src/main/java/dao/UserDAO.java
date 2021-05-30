@@ -12,20 +12,34 @@ import org.json.simple.parser.ParseException;
 
 
 public class UserDAO {
-	public boolean insert(String uid, String jsonstr) throws NamingException, SQLException {
+	public boolean signup(String uid, String jsonstr) throws NamingException, SQLException, ParseException {
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;
-		
+		ResultSet rs = null;
 		try {
-			String sql = "INSERT INTO user(id, jsonstr) VALUES(?, ?)";
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, uid);
-			stmt.setString(2, jsonstr);
+			synchronized(this) {
+				String sql = "SELECT no FROM user ORDER BY no DESC LIMIT 1";
+				stmt = conn.prepareStatement(sql);
+				rs = stmt.executeQuery();
+				
+				int max = (!rs.next()) ? 0 : rs.getInt("no");
+				stmt.close();
+				
+				JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
+				jsonobj.put("no", max + 1);
+				
+			String sql2 = "INSERT INTO user(no, id, jsonstr) VALUES(?, ?, ?)";
+			stmt = conn.prepareStatement(sql2);
+			stmt.setInt(1,  max + 1);
+			stmt.setString(2, jsonobj.get("id").toString());
+			stmt.setString(3, jsonobj.toJSONString());
 			
 			int count = stmt.executeUpdate();
 			
 			return (count == 1) ? true : false ;
+			}
 		}finally {
+			if(rs != null) rs.close();
 			if(stmt != null) stmt.close();
 			if(conn != null) conn.close();
 		}
@@ -97,26 +111,6 @@ public class UserDAO {
 		ResultSet rs = null;
 		
 		try {
-
-			/*
-			ArrayList<UserObj> users = new ArrayList<UserObj>();
-			while(rs.next()) {
-				UserObj userobj = new UserObj(rs.getString("id"), rs.getString("name"), rs.getString("ts"));
-				users.add(userobj);
-			}
-			return users;
-			*/
-			/*
-			JSONArray users = new JSONArray();
-			while(rs.next()) {
-				JSONObject usrobj = new JSONObject();
-				usrobj.put("id", rs.getString("id"));
-				usrobj.put("name", rs.getString("name"));
-				usrobj.put("ts", rs.getString("ts"));
-				users.add(usrobj);
-			}
-			return users.toJSONString(); // 스트링 형태로 인코딩해서 반환
-			*/
 			
 			String sql = "SELECT jsonstr FROM user";
 			stmt = conn.prepareStatement(sql);
@@ -136,25 +130,4 @@ public class UserDAO {
 			if(conn != null) conn.close();
 		}
 	}
-	
-	public int signup(String uid, String upass, String uname) throws NamingException, SQLException{
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			String sql = "INSERT INTO user(id, password, username) VALUES(?, ?, ?)";
-			conn = ConnectionPool.get();
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, uid);
-			stmt.setString(2, upass);
-			stmt.setString(3, uname);
-			int count = stmt.executeUpdate();
-
-			return count;
-			
-			
-		} finally {
-			if(stmt != null) stmt.close();
-			if(conn != null) conn.close();
-		}
-	} 
 }

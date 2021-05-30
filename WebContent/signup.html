@@ -87,7 +87,7 @@
 <script>
 function signup(){
 	
-	var userclass = $("#userclass").val().trim();
+	var userclass = $("#userclass:checked").val().trim();
 	
 	var id = $("#id").val().trim();
 	if(id == ""){
@@ -124,7 +124,7 @@ function signup(){
 		return;
 	}
 	
-	var sex = $("#sex").val().trim();	
+	var sex = $("#sex:checked").val().trim();	
 	
 	var birth = $("#birth").val().trim();
 	if(birth == ""){
@@ -140,7 +140,7 @@ function signup(){
 		return;
 	}
 	
-	var usrobj = {userclass: userclass, id: id, password: pw, name: name, birth: birth, phonenum: phonenum, ts: getToday()};
+	var usrobj = {userclass: userclass, id: id, password: pw, name: name, sex: sex, birth: birth, phonenum: phonenum, ts: getToday()};
 	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
 	
 	var url = "jsp/signup.jsp";

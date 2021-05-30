@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="UTF-8" />
+<!-- <link rel="stylesheet" href="css/core.css"> -->
+<!-- <link rel="stylesheet" href="css/main.css"> -->
+<title>Fiore</title>
+</head>
+<body>
+	<div style="text-align:center">
+		<input type="text" id="id" placeholder="아이디 (이메일주소)"><br>
+		<input type="text" id="title" name="title" placeholder="제목을 입력해주세요"><br>
+		<textarea id="content" placeholder="내용을 입력해주세요." rows="20" cols="40"></textarea><br>
+		<div>
+		<div style="color: gray"><small>이미지를 넣어주세요</small></div>
+			<input type="file" id="image">
+		</div>
+		<br>
+		<input type="submit" value="업로드하기" onclick="upload()">
+	</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function(){
+	Page.init(setup);
+});
+
+function setup(uid){
+}
+
+function upload(){
+	var id = $("#id").val().trim();
+	if(id == ""){
+		alert("아이디를 입력해 주세요");
+		$("#id").focus();
+		return;
+	}
+	
+	var title = $("#title").val().trim();
+	if(title == ""){
+		alert("제목을 입력해주세요");
+		$("#title").focus();
+		return;
+	}
+	
+	var content = $("#content").val().trim();
+	if(content == ""){
+		alert("작성글을 입력해주세요");
+		$("#content").focus();
+		return;
+	}
+	
+	var imgobj = $("#image")[0].files[0];
+	var jsonobj = {id: id, title: title, content: content, ts: getTime()};
+	if(imgobj != null){
+		jsonobj.images = [imgobj.name];
+	}
+	
+	var params = new FormData();
+	params.append("jsonstr", JSON.stringify(jsonobj));
+	if(imgobj != null){
+		params.append("image", imgobj);
+	}
+	
+	var url = "jsp/classFeedAdd.jsp";
+	AJAX.call(url, params, function(data){
+		var code = data.trim();
+		if (code == "ER") {
+			alert("작성 글의 업로드 중 오류가 발생하였습니다.");
+		}
+		else{
+			alert("작성 글의 업로드가 완료되었습니다.");
+			window.location.href = "onedayclass.html";
+		}
+	}, true);
+}
+
+function getToday(){
+var date = new Date();
+var year = date.getFullYear();
+var month = ("0" + (1 + date.getMonth())).slice(-2);
+var day = ("0" + date.getDate()).slice(-2);
+return year + "-" + month + "-" + day;
+}
+
+function getTime(){
+var date = new Date();
+var year = date.getFullYear();
+var month = ("0" + (1 + date.getMonth())).slice(-2);
+var day = ("0" + date.getDate()).slice(-2);
+
+var hour = ("0" + date.getHours()).slice(-2);
+var min = ("0" + date.getMinutes()).slice(-2);
+var sec = ("0" + date.getSeconds()).slice(-2);
+
+return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+}
+</script>

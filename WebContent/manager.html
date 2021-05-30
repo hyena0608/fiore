@@ -33,11 +33,11 @@
 	<td>
 		<input id="managenum" type="password" placeholder="관리자 번호">
 	</td>
-	<td><input type="submit" class="mtop-20" value="로그인" onclick=""></td>
+	<td><input type="submit" class="mtop-20" value="로그인" onclick="managelogin()"></td>
 	</tr>
 	<tr>
 	<td colspan=2 style="border-top:1px solid black">
-	 <div style="padding:5px 0px 0px 0px" onclick=""> > 회원 정보 관리</div>
+	 <div style="padding:5px 0px 0px 0px" onclick="userList()"> > 회원 정보 관리</div>
 	</tr>
 	<tr>
 	<td colspan=2>
@@ -45,7 +45,7 @@
 	</tr>
 	<tr>
 	<td colspan=2>
-	 <div onclick=""> > 로그아웃</div>
+	 <div onclick="logout()"> > 로그아웃</div>
 	</tr>
 	</table>
 	</div>
@@ -53,3 +53,35 @@
 	<div class="page-footer"> Copyright: Fiore.com, 2021 </div>
 </body>
 </html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function managelogin(){
+	
+	var managenum = $("#managenum").val().trim();
+	if(managenum == ""){
+		alert("관리자 번호를 입력해주세요.");
+		$("#managenum").focus();
+		return;
+	}
+	var url = "jsp/managerlogin.jsp?managenum=" + managenum;
+	AJAX.call(url, null, function(data){
+		var code = data.trim();
+		if(code == "OK"){
+			window.location.href = "manager.html";
+		}
+		else{
+			alert("관리자 번호가 일치하지 않습니다.");
+		}
+	}, false);
+}
+
+function logout(){
+	window.location.href = "jsp/managerlogout.jsp";
+}
+
+function userList(){
+	window.location.href = "userList.html";
+}
+
+</script>
