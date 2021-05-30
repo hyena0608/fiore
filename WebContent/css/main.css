@@ -1,0 +1,26 @@
+.page-mnu{
+	float:left;
+	background-color:white;
+	border : 1px solid #eee;
+	width:100%;
+	margin-left:auto;
+	margin-right: auto;
+}
+.page-mnu li {
+	float:left;
+	width:20%;
+	height:40px;
+	line-height:40px;
+	text-align:center;
+	font-size: 0.85em;
+	font-family:"HY�뿤�뱶�씪�씤M";
+	list-style:none;
+	vertical-align:middle;
+}
+.page-mnu li a {
+	text-decoration:none;
+}
+
+.page-mnu li:hover{
+	background-color : green;
+}
