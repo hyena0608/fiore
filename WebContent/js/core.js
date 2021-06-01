@@ -24,6 +24,8 @@ var AJAX = {
 	}
 };
 
+
+
 var Page = {
 	init: function(cbfunc){
 		AJAX.call("jsp/session.jsp", null, function(data){

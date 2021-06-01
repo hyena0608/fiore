@@ -3,12 +3,38 @@
 <head>
 	<meta charset="utf-8">
 	<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0 text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/core.css">
 	<title>Fiore</title>
 </head>
 <body>
 	<div>
-		<table border="1" id="list"></table>
+		<table border="1" id="list">
+			<tr><td colspan=10 align=center>가입자 리스트</td></tr>
+			<tr>
+			<td><select id='which' name='which'>
+				<option value='no'>번호</option>
+				<option value='id'>아이디</option>
+				<option value='name'>이름</option>
+				<option value='phonenum'>전화번호</option>
+			</select></td>
+			<td colspan=6><input type='text' id='search'></td>
+			<td><input type='submit' value='정렬하기' onclick='sort()'></td>
+			<td><input type='submit' value='수정' onclick='edit()'></td>
+			<td><input type='submit' value='삭제' onclick=''></td>
+			</tr>
+			<td>선택</td>
+			<td>번호</td>
+			<td>구분</td>
+			<td>아이디</td>
+			<td>비밀번호</td>
+			<td>이름</td>
+			<td>성별</td>
+			<td>생년월일</td>
+			<td>전화번호</td>
+			<td>가입일자</td>
+			</tr>	
+		</table>
 	</div>
 </body>
 </html>
@@ -27,32 +53,8 @@
 	}
 	
 	function show(users){
+		console.log(users);
 		var str = "";
-		str += "<tr><td colspan=10 align=center>가입자 리스트</td>";
-		str += "<tr>";
-		str += "<tr>";
-		str += "<td><select id='which'>";
-		str += "<option value='no'>번호</option>";
-		str += "<option value='id'>아이디</option>";
-		str += "<option value='name'>이름</option>";
-		str += "<option value='phonenum'>전화번호</option>";
-		str += "</select></td>"
-		str += "<td colspan=6><input type='text' id='search'></td>";
-		str += "<td><input type='submit' value='정렬하기' onclick='sort()'></td>";
-		str += "<td><input type='submit' value='수정' onclick='edit()'></td>";
-		str += "<td><input type='submit' value='삭제' onclick='delete()'></td>";
-		str += "</tr>"
-		str += "<td>선택</td>"
-		str += "<td>번호</td>";
-		str += "<td>구분</td>";
-		str += "<td>아이디</td>";
-		str += "<td>비밀번호</td>";
-		str += "<td>이름</td>";
-		str += "<td>성별</td>";
-		str += "<td>생년월일</td>";
-		str += "<td>전화번호</td>";
-		str += "<td>가입일자</td>";
-		str += "</tr>";
 		for(var i=0; i<users.length; i++){
 			str += "<tr>";
 			str += "<td><input type='radio' id='no' value='" + users[i].no + "'</td>"; 
@@ -67,7 +69,7 @@
 			str += "<td>&nbsp;" + users[i].ts + "</td>";
 			str += "</tr>";
 		}
-		$("#list").html(str); // <table id="list">에 들어가게 됨
+		$("#list").append(str); // <table id="list">에 들어가게 됨
 	}
 	
 	function edit(){
@@ -75,6 +77,38 @@
 		if(selecteduser == ""){
 			alert("수정할 회원을 선택해주세요.");
 			$("#no").focus();
+			return;
+		}
+	}
+	
+	function sort(){
+		var byhow = $("#which option:selected").val().trim();
+		if(byhow == "no"){
+			var url2 = "jsp/userList.jsp?byhow" + byhow;
+			AJAX.call(url2, null, function(data){
+				var users2 = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+				show(users2); 
+				console.log(users2);
+			});
+			function show(users2){
+				var str = "";
+				for(var i=0; i<users2.length; i++){
+					str += "<tr>";
+					str += "<td><input type='radio' id='no' value='" + users2[i].no + "'</td>"; 
+					str += "<td>" + users2[i].no + "</td>";
+					str += "<td>" + users2[i].userclass + "</td>";
+					str += "<td>" + users2[i].id + "</td>";
+					str += "<td>" + users2[i].password + "</td>";
+					str += "<td>" + users2[i].name + "</td>";
+					str += "<td>" + users2[i].sex + "</td>";
+					str += "<td>" + users2[i].birth + "</td>";
+					str += "<td>" + users2[i].phonenum + "</td>";
+					str += "<td>&nbsp;" + users2[i].ts + "</td>";
+					str += "</tr>";
+				}
+				$("#list").html(str); // <table id="list">에 들어가게 됨
+			}
+		}else{
 			return;
 		}
 	}

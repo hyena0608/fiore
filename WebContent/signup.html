@@ -3,8 +3,8 @@
 <head>
 <meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
 <meta charset="UTF-8" />
-<!-- <link rel="stylesheet" href="css/core.css"> -->
-<!-- <link rel="stylesheet" href="css/main.css"> -->
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/core.css">
 <title>Fiore</title>
 <style>
 	.p{
@@ -70,7 +70,15 @@
 		<td align=right>전화번호 &nbsp;</td>
 		<td colspan=2> <input type="text" id="phonenum" name="phonenum" placeholder="000-0000-0000"> </td>
 	</tr>
-	
+	<tr>
+    	<td align=right>상호명 &nbsp;</td>
+    	<td colspan=2> <input type="text" id="storename" name="storename" placeholder="판매자만 작성하세요"> </td>
+    </tr>
+   
+    <tr>
+        <td align=right>주소 &nbsp;</td>
+        <td colspan=2> <input type="text" id="storeaddress" name="storeaddress" placeholder="판매자만 작성하세요"> </td>
+    </tr>
 	<tr>
 		<td colspan=3 align=center height=50>
 		<input type="submit" value="JOIN" onclick="signup()">
@@ -140,7 +148,11 @@ function signup(){
 		return;
 	}
 	
-	var usrobj = {userclass: userclass, id: id, password: pw, name: name, sex: sex, birth: birth, phonenum: phonenum, ts: getToday()};
+	var storename = $("#storename").val().trim();
+	
+	var storeaddress = $("#storeaddress").val().trim();
+		
+	var usrobj = {userclass: userclass, id: id, password: pw, name: name, sex: sex, birth: birth, phonenum: phonenum, storename: storename, storeaddress: storeaddress, ts: getToday()};
 	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
 	
 	var url = "jsp/signup.jsp";
