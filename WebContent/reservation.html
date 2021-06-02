@@ -33,7 +33,7 @@
 	<div><span class="p">꽃</span> 예약하기</div><br>
 	<div style="color:darkgray"> > 꽃다발 예약</div>
     <div class="drop">
-    	<div class="button"> > 오늘의 꽃 보기</div>
+    	<div class="button"> > 오늘의 꽃 보기
             <table class="hide">
                 <tr>
 				<td style="text-align:center">
@@ -53,16 +53,158 @@
 				</tr>
             </table>
 	</div>
-	<div class="button"> > 예약하기 </div>
- 	<div style="color:darkgray"> > 후기</div>
+	<div class="button" onclick=""> > 예약하기 </div>
+	<!-- 후기 버튼 누르면 후기 쫘르륵 나오는데 그 밑에 다른 판매자 리스트 같은거 넣으면 계속 스크롤 해야하고 
+		 후기 작성하는것도 버튼이 맨위에 오거나 아니면 아예 따로 후기 페이지를 빼야할 거 같아요 -->
+ 	<div class="button" onclick="comment()" style="color:darkgray"> > 후기</div>
+ 	<table id="list"></table>
+ 	<!-- 판매자 리스트 부분 어디다가 넣어야할 지 몰라서 여기다가 넣었어요 -->
+ 	<div class="button" onclick="" style="color: red">판매자 리스트</div>
 	</div>
 	</div>
 </body>
 </html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
 <script>
    $(document).ready(function(){
         $(".drop>table").click(function(){
             $(this).next("table").toggleClass("hide");
         });
     });
+   
+   $(document).ready(function(){
+		Page.init();
+	});
+
+	var minNo = -1;
+	function comment(){
+		var str = "<div class='button' style='width:40%; line-height:20px' onclick='uploadtable()';>후기작성</div><br><div id='comAdd'></div>";
+		$("#list").html(str);
+		AJAX.call("jsp/feedGetGroup.jsp", null, function(data){
+			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+			console.log(feeds);
+			if(feeds.length > 0){
+				minNo = feeds[feeds.length - 1].no;
+			}
+			show(feeds); 
+		});
+	}
+
+	function show(feeds){
+		var str = "";
+		for(var i=0; i<feeds.length; i++){
+			var img = feeds[i].images, imgstr = "";
+			if(img != null){
+				imgstr = "<img src='images/" + img + "'width=100%>";
+			}
+			str += "<tr><td colspan=2><hr></td></tr>";
+			str += "<tr>";
+			str += "<td>" + feeds[i].title + "</td>";
+			str += "<td>" + feeds[i].ts + "</td>";
+			str += "</tr>";
+			str += "<tr><td colspan=2>" + imgstr + "</td></tr>";
+			str += "<tr><td colspan=2>" + feeds[i].content + "</td></tr>";
+		}
+		$("#list").append(str); // <table id="list">에 들어가게 됨
+	}
+
+	function getNext(){
+		var params = {maxNo: minNo};
+		AJAX.call("jsp/feedGetGroup.jsp", params, function(data){
+			var feeds = JSON.parse(data.trim());
+			if (feeds.length > 0){ 
+				minNo = feeds[feeds.length - 1].no;
+			}else{
+				alert("더이상 작성글이 없습니다.");
+			}
+			show(feeds);
+		});
+	}
+	
+	function uploadtable(){
+		var str = "";
+		str += "<div style='text-align:center'>"
+		str += "<input type='text' id='id' placeholder='아이디 (이메일주소)'><br>"
+		str += "<input type='text' id='title' name='title' placeholder='제목을 입력해주세요'><br>"
+		str += "<textarea id='content' placeholder='내용을 입력해주세요.' rows='20' cols='40'></textarea><br>"
+		str += "<div>"
+		str += "<div style='color: gray'><small>이미지를 넣어주세요</small></div>"
+		str += "<input type='file' id='image'>"
+		str += "</div>"
+		str += "<br>"
+		str += "<input type='submit' value='업로드하기' onclick='upload()'>"
+		str += "</div>"
+		$("#comAdd").html(str);
+	}
+	
+	/* 업로드 관련 */
+	function upload(){
+	var id = $("#id").val().trim();
+	if(id == ""){
+		alert("아이디를 입력해 주세요");
+		$("#id").focus();
+		return;
+	}
+	
+	var title = $("#title").val().trim();
+	if(title == ""){
+		alert("제목을 입력해주세요");
+		$("#title").focus();
+		return;
+	}
+	
+	var content = $("#content").val().trim();
+	if(content == ""){
+		alert("작성글을 입력해주세요");
+		$("#content").focus();
+		return;
+	}
+	
+	var imgobj = $("#image")[0].files[0];
+	var jsonobj = {id: id, title: title, content: content, ts: getTime()};
+	if(imgobj != null){
+		jsonobj.images = [imgobj.name];
+	}
+	
+	var params = new FormData();
+	params.append("jsonstr", JSON.stringify(jsonobj));
+	if(imgobj != null){
+		params.append("image", imgobj);
+	}
+	
+	var url = "jsp/classFeedAdd.jsp";
+	AJAX.call(url, params, function(data){
+		var code = data.trim();
+		if (code == "ER") {
+			alert("작성 글의 업로드 중 오류가 발생하였습니다.");
+		}
+		else{
+			alert("작성 글의 업로드가 완료되었습니다.");
+			window.location.href = "onedayclass.html";
+		}
+	}, true);
+	}
+	
+	function getToday(){
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	return year + "-" + month + "-" + day;
+	}
+	
+	function getTime(){
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	
+	var hour = ("0" + date.getHours()).slice(-2);
+	var min = ("0" + date.getMinutes()).slice(-2);
+	var sec = ("0" + date.getSeconds()).slice(-2);
+	
+	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+	}
+
 </script>
