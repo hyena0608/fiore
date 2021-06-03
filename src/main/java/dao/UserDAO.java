@@ -170,7 +170,7 @@ public class UserDAO {
 		
 		try {
 			
-			String sql = "SELECT jsonstr FROM user";
+			String sql = "SELECT jsonstr FROM user where userclass='ÆÇ¸ÅÀÚ'";
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			

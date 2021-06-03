@@ -59,7 +59,8 @@
  	<div class="button" onclick="comment()" style="color:darkgray"> > 후기</div>
  	<table id="list"></table>
  	<!-- 판매자 리스트 부분 어디다가 넣어야할 지 몰라서 여기다가 넣었어요 -->
- 	<div class="button" onclick="" style="color: red">판매자 리스트</div>
+ 	<div class="button" onclick="showseller()" style="color: red">판매자 리스트</div>
+ 	<table id="list2" border="1"></table>
 	</div>
 	</div>
 </body>
@@ -85,7 +86,6 @@
 			$("#list").html(str);
 			AJAX.call("jsp/getGroupComment.jsp", null, function(data){
 				var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-				console.log(feeds);
 				if(feeds.length > 0){
 					minNo = feeds[feeds.length - 1].no;
 				}
@@ -220,6 +220,43 @@
 	var sec = ("0" + date.getSeconds()).slice(-2);
 	
 	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+	}
+	
+	
+	
+	function showseller(){
+		var users;
+		AJAX.call("jsp/sellerList.jsp", null, function(data){
+			users = JSON.parse(data.trim());
+			showseller2(users);// 스트링을 객체 형태로 바꿈, 배열이 된다.
+		});
+	}
+	
+	// 판매자 리스트
+	function showseller2(users){
+		var str = "";
+		str += "<tr><td colspan='7' style='text-align:center'>판매자 리스트</td>";
+		str += "<tr>";
+		str += "<td>선택</td>";
+		str += "<td>가게번호</td>"
+		str += "<td>가게이름</td>";
+		str += "<td>가게주소</td>";
+		str += "<td>구분</td>";
+		str += "<td>아이디</td>"
+		str += "<td>휴대폰 번호</td>";
+		str += "</tr>";
+		for(var i=0; i<users.length; i++){
+			str += "<tr>";
+			str += "<td><input type='radio' id='no' value='" + users[i].no + "'</td>"; 
+			str += "<td>" + users[i].no + "</td>";
+			str += "<td>" + users[i].storename + "</td>";
+			str += "<td>" + users[i].storeaddress + "</td>";
+			str += "<td>" + users[i].userclass + "</td>";
+			str += "<td>" + users[i].id + "</td>";
+			str += "<td>" + users[i].phonenum + "</td>";
+			str += "</tr>";
+		}
+		$("#list2").html(str);
 	}
 
 </script>
