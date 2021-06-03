@@ -4,8 +4,7 @@
 	request.setCharacterEncoding("utf-8");
 	
 	String uid = request.getParameter("id");
-	// String upass = request.getParameter("ps");
-	// String uname = request.getParameter("uname");
+	String userclass = request.getParameter("userclass");
 	String jsonstr = request.getParameter("jsonstr");
 	
 	UserDAO dao = new UserDAO();
@@ -14,7 +13,7 @@
 		return;
 	}
 	
-	if(dao.signup(uid, jsonstr) == true){
+	if(dao.signup(uid, userclass, jsonstr) == true){
 		session.setAttribute("id", uid);
 		out.print("OK");
 	}

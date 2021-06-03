@@ -44,7 +44,7 @@
 	}
 	
 	FeedDAO dao = new FeedDAO();
-	if(dao.insert(jsonstr) == true) {
+	if(dao.insertComment(jsonstr) == true) {
 		out.print("OK");
 	}
 	else{

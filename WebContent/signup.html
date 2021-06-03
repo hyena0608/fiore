@@ -153,7 +153,7 @@ function signup(){
 	var storeaddress = $("#storeaddress").val().trim();
 		
 	var usrobj = {userclass: userclass, id: id, password: pw, name: name, sex: sex, birth: birth, phonenum: phonenum, storename: storename, storeaddress: storeaddress, ts: getToday()};
-	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
+	var params = {id: id, userclass: userclass, jsonstr: JSON.stringify(usrobj)};
 	
 	var url = "jsp/signup.jsp";
 	AJAX.call(url, params, function(data){
