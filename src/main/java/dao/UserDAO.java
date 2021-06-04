@@ -132,19 +132,13 @@ public class UserDAO {
 		}
 	}
 	
-	public String getList2(String byhow) throws NamingException, SQLException {
+	public String getListsort(String which, String ascdesc) throws NamingException, SQLException {
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
-			String sql = "SELECT jsonstr FROM user order by";
-				if(byhow == "no") sql += " no desc";
-				else if(byhow == "id") sql += " id desc";
-				/*
-				else if(byhow == "name") sql += " order by name desc";
-				else if(byhow == "phonenum") sql += " order by phonenum desc";
-				*/
+			String sql = "SELECT jsonstr FROM user ORDER BY " + which + " " + ascdesc;
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			
@@ -172,6 +166,32 @@ public class UserDAO {
 			
 			String sql = "SELECT jsonstr FROM user where userclass='ÆÇ¸ÅÀÚ'";
 			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String userSearch(String uid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM user WHERE id = ?" ;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, uid);
 			rs = stmt.executeQuery();
 			
 			String str = "[";

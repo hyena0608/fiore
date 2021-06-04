@@ -2,6 +2,8 @@
 <%@ page import ="dao.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
-	String str = (new UserDAO()).getList();
+	String uid = request.getParameter("id");
+	UserDAO dao = new UserDAO();
+	String str = dao.userSearch(uid);
 	out.print(str);
 %>
