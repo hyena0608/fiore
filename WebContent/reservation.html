@@ -29,6 +29,113 @@
     <div class="section pad-24 mtop-30">
   	<div><span class="p">꽃집</span> 알아보기</div><br>
 <!-- 지도 api -->
+	<div id="map" style="width:100%;height:350px;"></div>
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2938f43df9209b84272d11be417f045a"></script>
+		<script>
+		var mapContainer = document.getElementById('map');
+		var mapOptions = {
+			center: new kakao.maps.LatLng(37.63948, 127.10985),
+			level: 6
+		};
+		
+		//지도 생성
+		var map = new kakao.maps.Map(mapContainer, mapOptions);
+		
+		// 마커가 표시될 위치
+		//var markerPosition  = new kakao.maps.LatLng(37.64287, 127.10526); //그린샵
+		//var markerPosition2  = new kakao.maps.LatLng(37.63948, 127.10985); //청운꽃방
+		var positions = [
+			    {
+			    	content: '<div style="padding:5px;"><center>그린샵</center><a href="https://map.kakao.com/link/map/그린샵, 37.64287, 127.10526" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/그린샵, 37.64287, 127.10526" style="color:blue" target="_blank">길찾기</a></div>', 
+			        latlng: new kakao.maps.LatLng(37.64287, 127.10526)
+			    },
+			    {
+			        content: '<div style="padding:5px;"><center>청운꽃방</center><a href="https://map.kakao.com/link/map/청운꽃방, 37.63948, 127.10985" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/청운꽃방, 37.63948, 127.10985" style="color:blue" target="_blank">길찾기</a></div>', 
+			        latlng: new kakao.maps.LatLng(37.63948, 127.10985)
+			    },
+			    {
+			        content: '<div style="padding:5px;"><center>라온플라워앤가든</center><a href="https://map.kakao.com/link/map/라온플라워앤가든, 37.63362, 127.11958" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/라온플라워앤가든, 37.63362, 127.11958" style="color:blue" target="_blank">길찾기</a></div>', 
+			        latlng: new kakao.maps.LatLng(37.63362, 127.11958)
+			    },
+			    {
+			        content: '<div style="padding:5px;"><center>파란마을</center><a href="https://map.kakao.com/link/map/파란마을,37.64171, 127.12131" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/파란마을, 37.64171, 127.12131" style="color:blue" target="_blank">길찾기</a></div>', 
+			        latlng: new kakao.maps.LatLng(37.64171, 127.12131)
+			    }
+			    /*,{
+			        content: '<div style="padding:5px;"><center>오직꽃</center><a href="https://map.kakao.com/link/map/오직꽃,37.63231, 127.11550" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/오직꽃, 37.63231, 127.11550" style="color:blue" target="_blank">길찾기</a></div>', 
+			        latlng: new kakao.maps.LatLng(37.63231, 127.11550)
+			    }*/
+	    ];
+		
+		// 여러마커를 생성 + 여러 인포윈도우 생성
+		for(var i=0; i<positions.length; i++) {
+			
+				var marker = new kakao.maps.Marker({
+					map: map, // 마커를 표시할 지도
+			        position: positions[i].latlng // 마커를 표시할 위치
+				});
+				marker.setMap(map);
+				
+				// 마커에 표시할 인포윈도우를 생성합니다 
+			    var infowindow = new kakao.maps.InfoWindow({
+			        content: positions[i].content // 인포윈도우에 표시할 내용
+			    });
+			    infowindow.open(map, marker); 
+			    
+			    //마우스 이벤트
+			    //kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+			    //kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+				
+		}
+		/*
+		// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+		function makeOverListener(map, marker, infowindow) {
+		    return function() {
+		        infowindow.open(map, marker);
+		    };
+		}
+
+		// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+		function makeOutListener(infowindow) {
+		    return function() {
+		        infowindow.close();
+		    };
+		}*/
+		
+		//일일히 마커 생성 TEST
+		/*var marker = new kakao.maps.Marker({
+		    position: markerPosition
+		});
+		var marker2 = new kakao.maps.Marker({
+		    position: markerPosition2
+		});*/ 
+		
+		/*for(var t=0; t<iwpositions.length; t++){
+			var infowindow = new kakao.maps.InfoWindow({
+					map: map,
+				    position : iwpositions[t].iwPosition, 
+				    content : iwContent[t] 
+			});
+		}*/
+		
+		// 마커가 지도 위에 표시되도록 설정
+		 //marker.setMap(map);
+		 //marker2.setMap(map);
+		
+		// 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능.
+		// var iwContent = '<div style="padding:5px;"><center>그린샵</center><a href="https://map.kakao.com/link/map/그린다 플라워, 37.64287, 127.10526" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/그린다 플라워, 37.64287, 127.10526" style="color:blue" target="_blank">길찾기</a></div>',
+	   //인포윈도우 표시 위치
+	 	//	iwPosition = new kakao.maps.LatLng(37.64287, 127.10526); 
+	
+		// 인포윈도우를 생성
+		/*var infowindow = new kakao.maps.InfoWindow({
+		    position : iwPosition, 
+		    content : iwContent 
+		});*/
+		  
+		// 마커 위에 인포윈도우를 표시. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됨.
+		//infowindow.open(map, marker); 	
+	</script>
 	<hr>
 	<div><span class="p">꽃</span> 예약하기</div><br>
 	<div style="color:darkgray"> > 꽃다발 예약</div>

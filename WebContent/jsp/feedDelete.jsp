@@ -3,11 +3,10 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	
-	String uid = request.getParameter("id");
-	String jsonstr = request.getParameter("jsonstr");
+	String deleteno = request.getParameter("deleteno");
 	
 	FeedDAO dao = new FeedDAO();
-	if(dao.edit(uid, jsonstr) == true){
+	if(dao.delete(deleteno) == true){
 		out.print("OK");
 	}
 	else{

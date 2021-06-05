@@ -47,12 +47,61 @@ public class FeedDAO {
 			if(conn != null) conn.close();
 		}
 	}
+	
 	public String getList() throws NamingException, SQLException {
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;	
 		try {
 			stmt = conn.prepareStatement("select jsonstr from onedaypost ORDER BY no DESC");
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt ++ > 0) str += ", ";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String myFeedList(String uid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;	
+		try {
+			stmt = conn.prepareStatement("select jsonstr from onedaypost where id = ?");
+			stmt.setString(1, uid);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt ++ > 0) str += ", ";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String myCommentList(String uid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;	
+		try {
+			stmt = conn.prepareStatement("select jsonstr from comment where id = ?");
+			stmt.setString(1, uid);
 			rs = stmt.executeQuery();
 			
 			String str = "[";
@@ -158,6 +207,156 @@ public class FeedDAO {
 			
 		}finally {
 			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String getFeedsort(String which, String ascdesc) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM onedaypost ORDER BY " + which + " " + ascdesc;
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String feedUserSearch(String uid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM onedaypost WHERE id = ?" ;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, uid);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String editlist(String editno) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM onedaypost WHERE no = ?" ;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, editno);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public String editCommentlist(String editid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM comment WHERE no = ?" ;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, editid);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	public boolean edit(String uid, String jsonstr) throws NamingException, SQLException{
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement("update onedaypost set jsonstr = ? where id = ?");
+			stmt.setString(1, jsonstr);
+			stmt.setString(2, uid);
+			int count = stmt.executeUpdate();
+			return (count == 1) ? true : false; 
+		}finally {
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public boolean editComment(String jsonstr) throws NamingException, SQLException, ParseException{
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		
+		try {
+			JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
+			stmt = conn.prepareStatement("update comment set jsonstr = ? where no = ?");
+			stmt.setString(1, jsonobj.toJSONString());
+			stmt.setString(2, jsonobj.get("no").toString());
+			int count = stmt.executeUpdate();
+			return (count == 1) ? true : false; 
+		}finally {
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
+	public boolean delete(String deleteno) throws NamingException, SQLException{
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement("delete from onedaypost where no = ?");
+			stmt.setString(1, deleteno);
+			int count = stmt.executeUpdate();
+			return (count == 1) ? true : false; 
+		}finally {
 			if(stmt != null) stmt.close();
 			if(conn != null) conn.close();
 		}

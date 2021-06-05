@@ -71,7 +71,7 @@
 	
 	// 수정기능
 	function editno(){
-		var editno = $(".radio[name="editno"]:checked").val();
+		var editno = $(':radio[name="editno"]:checked').val();
 		if(selecteduser == ""){
 			alert("수정할 회원을 선택해주세요.");
 			$("#editno").focus();
