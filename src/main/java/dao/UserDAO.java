@@ -66,13 +66,13 @@ public class UserDAO {
 			if(conn != null) conn.close();
 		}
 	}
-	public boolean delete(String uid) throws NamingException, SQLException{
+	public boolean delete(String deleteno) throws NamingException, SQLException{
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;
 		
 		try {
-			stmt = conn.prepareStatement("delete from user where id = ?");
-			stmt.setString(1, uid);
+			stmt = conn.prepareStatement("delete from user where no = ?");
+			stmt.setString(1, deleteno);
 			int count = stmt.executeUpdate();
 			return (count == 1) ? true : false; 
 		}finally {
@@ -204,6 +204,54 @@ public class UserDAO {
 			
 		}finally {
 			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+
+	public String editlist(String editno) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT jsonstr FROM user WHERE no = ?" ;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, editno);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt++>0) str +=",";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	public boolean edit(String uid, String userclass, String jsonstr) throws NamingException, SQLException{
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement("update user set userclass = ? where id = ?");
+			stmt.setString(1, userclass);
+			stmt.setString(2, uid);
+			int count = stmt.executeUpdate();
+			if(count == 0) return false;
+			stmt.close();
+			
+			stmt = conn.prepareStatement("update user set jsonstr = ? where id = ?");
+			stmt.setString(1, jsonstr);
+			stmt.setString(2, uid);
+			count = stmt.executeUpdate();
+			return (count == 1) ? true : false; 
+		}finally {
 			if(stmt != null) stmt.close();
 			if(conn != null) conn.close();
 		}

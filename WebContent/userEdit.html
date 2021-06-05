@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0 text/html; charset=utf-8">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/core.css">
+	<title>Fiore</title>
+</head>
+<body>
+	<!-- 여기 테이블 2개 인데 두개 길이를 맞추고 싶은데 어떻게 해야할까요 
+		 select 값 받아서 정렬하기 버튼에 onclick 값 if문으로 넣어주기-->
+	<div>
+		<table border="1">
+			<tr><td colspan=12 align=center>가입자 수정 페이지</td></tr>
+			<tr>
+			<td>선택</td>
+			<td>번호</td>
+			<td>구분</td>
+			<td>아이디</td>
+			<td>비밀번호</td>
+			<td>이름</td>
+			<td>성별</td>
+			<td>생년월일</td>
+			<td>전화번호</td>
+			<td>가게이름</td>
+			<td>가게주소</td>
+			<td>가입일자</td>
+			</tr>
+		<table border="1" id="list"></table>
+		<input type="submit" value="수정하기" onclick="">
+	</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+	$(document).ready(function(){
+		MPage.init(start);
+	});
+	
+	function start(uid){
+		AJAX.call("jsp/userList.jsp", null, function(data){
+			var users = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+			show(users); 
+		});
+	}
+	
+	function show(users){
+		console.log(users);
+		var str = "";
+		for(var i=0; i<users.length; i++){
+			str += "<tr>";
+			str += "<td><input type='radio' name='editno' id='editno' value='" + users[i].no + "'</td>"; 
+			str += "<td>" + users[i].no + "</td>";
+			str += "<td>" + users[i].userclass + "</td>";
+			str += "<td>" + users[i].id + "</td>";
+			str += "<td>" + users[i].password + "</td>";
+			str += "<td>" + users[i].name + "</td>";
+			str += "<td>" + users[i].sex + "</td>";
+			str += "<td>" + users[i].birth + "</td>";
+			str += "<td>" + users[i].phonenum + "</td>";
+			str += "<td>" + users[i].storename + "</td>";
+			str += "<td>" + users[i].storeaddress + "</td>";
+			str += "<td>&nbsp;" + users[i].ts + "</td>";
+			str += "</tr>";
+		}
+		$("#list").html(str); // <table id="list">에 들어가게 됨
+	}
+	
+	
+	// 수정기능
+	function editno(){
+		var editno = $(".radio[name="editno"]:checked").val();
+		if(selecteduser == ""){
+			alert("수정할 회원을 선택해주세요.");
+			$("#editno").focus();
+			return;
+		}
+		editpage(editno);
+	}
+	
+	function editpage(editno){
+		window.location.href = "userEditpage.jsp";
+	}
+	
+	
+
+</script>	
