@@ -6,7 +6,7 @@
 	String deleteno = request.getParameter("deleteno");
 	
 	FeedDAO dao = new FeedDAO();
-	if(dao.delete(deleteno) == true){
+	if(dao.feedDelete(deleteno) == true){
 		out.print("OK");
 	}
 	else{

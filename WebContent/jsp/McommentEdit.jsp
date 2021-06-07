@@ -6,7 +6,7 @@
 	String jsonstr = request.getParameter("jsonstr");
 	
 	FeedDAO dao = new FeedDAO();
-	if(dao.edit(no, jsonstr) == true){
+	if(dao.MeditComment(no, jsonstr) == true){
 		out.print("OK");
 	}
 	else{

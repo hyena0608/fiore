@@ -27,7 +27,7 @@ var AJAX = {
 
 
 var Page = {
-	init: function(cbfunc){
+	init: function(cbfunc, url){
 		AJAX.call("jsp/session.jsp", null, function(data){
 			var uid = data.trim();
 			if(uid == "null"){
@@ -35,14 +35,19 @@ var Page = {
 				window.location.href = "mypage.html";
 			}
 			else{
+				var param = (url == null) ? null : SessionStore.get(url);
 				if(cbfunc != null) cbfunc(uid);
 			}
-		});
-	},
+			});
+		},
+		go: function(url, param) {
+		SessionStore.set(url, param);
+		window.location.href = url;
+		},
 };
 
 var MPage = {
-	init: function(cbfunc){
+	init: function(cbfunc, url){
 		AJAX.call("jsp/session.jsp", null, function(data){
 			var uid = data.trim();
 			if(uid == "fiore"){
@@ -50,8 +55,48 @@ var MPage = {
 			}
 			else{
 				alert("관리자 로그인이 필요한 서비스입니다.");
+				var param = (url == null) ? null : SessionStore.get(url);
 				window.location.href = "manager.html";
 			}
 		});
 	},
+		go: function(url, param) {
+		SessionStore.set(url, param);
+		window.location.href = url;
+		},
+};
+
+var SessionStore = {
+	set: function (name, val) {
+	sessionStorage.setItem(name, JSON.stringify(val));
+	},
+	
+	get: function (name) {
+	var str = sessionStorage.getItem(name);
+	return (str == null || str == "null") ? null : JSON.parse(str);
+	},
+	
+	remove: function (name) {
+	sessionStorage.removeItem(name);
+	},
+};
+
+var DataCache = {
+	set: function (name, data) {
+		var obj = { ts: Date.now(), data: data };
+		SessionStore.set(name, obj);
+		},
+
+		get: function (name) {
+		var obj = SessionStore.get(name);
+		if (obj == null) {
+		return null;
+		}
+		var diff = (Date.now() - obj.ts) / 60000;
+		if (diff > 10) { // if 10 minutes expired
+		SessionStore.remove(name);
+		return null;
+		}
+		return obj.data;
+		},
 };

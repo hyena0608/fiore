@@ -2,11 +2,11 @@
 <%@ page import="dao.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
-	String no = request.getParameter("no");
-	String jsonstr = request.getParameter("jsonstr");
+	
+	String deleteno = request.getParameter("deleteno");
 	
 	FeedDAO dao = new FeedDAO();
-	if(dao.edit(no, jsonstr) == true){
+	if(dao.commentDelete(deleteno) == true){
 		out.print("OK");
 	}
 	else{

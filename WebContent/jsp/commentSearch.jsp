@@ -2,6 +2,8 @@
 <%@ page import ="dao.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
-	String str = (new FeedDAO()).myCommentList();
+	String uid = request.getParameter("id");
+	FeedDAO dao = new FeedDAO();
+	String str = dao.commentUserSearch(uid);
 	out.print(str);
 %>

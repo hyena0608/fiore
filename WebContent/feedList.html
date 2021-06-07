@@ -56,17 +56,19 @@
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="js/core.js"></script>
 <script>
-	function what(){
+	$(document).ready(function(){
+		MPage.init(what);
+	});
+	
+	function what(uid){
 		var what = $("#what option:selected").val();
 		if(what == "oneday"){
-			MPage.init(start);
+			start(uid);
 		}else{
-			MPage.init(start2);
+			start2(uid);
 		}
 	}
 
-	
-		
 	function start(uid){
 		AJAX.call("jsp/feedList.jsp", null, function(data){
 			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
@@ -129,12 +131,10 @@
 		if(what == "no"){
 			var no = "no";
 			sortFeed(no);
-			sortComment(no);
 		}
 		else if(what == "id"){
 			var id = "id";
 			sortFeed(id);
-			sortComment(id);
 		}
 	}
 	
@@ -142,15 +142,6 @@
 	function sortFeed(which){
 		var ascdesc = $("#ascdesc option:selected").val();
 		var url = "jsp/feedListsort.jsp?which=" + which + "&ascdesc=" + ascdesc;
-		AJAX.call(url, null, function(data){
-			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-			show(feeds); 
-		});
-	}
-	
-	function sortComment(which){
-		var ascdesc = $("#ascdesc option:selected").val();
-		var url = "jsp/commentListsort.jsp?which=" + which + "&ascdesc=" + ascdesc;
 		AJAX.call(url, null, function(data){
 			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
 			show(feeds); 
@@ -243,7 +234,7 @@
 		var params = {id: id, jsonstr: JSON.stringify(usrobj)};
 		
 		
-		var url = "jsp/userEdit.jsp";
+		var url = "jsp/feedEdit.jsp?no=" + no;
 		AJAX.call(url, params, function(data){
 			var code = data.trim();
 			if(code == "OK"){
@@ -308,14 +299,14 @@
 			str += "</select>"
 			str += "</td>"
 			str += "<td>"
-			str += "<input type='submit' value='정렬하기' onclick='sortwhat()'>"
+			str += "<input type='submit' value='정렬하기' onclick='sortwhatComment()'>"
 			str += "</td>"
 			str += "<td>";
 			str += "<input type='text' id='search' name='search' placeholder='검색할 아이디'>"
 			str += "</td>";
-			str += "<td><input type='submit' value='검색' onclick='search()'></td>"
-			str += "<td><input type='submit' value='수정' onclick='editno()'></td>"
-			str += "<td><input type='submit' value='삭제' onclick='deleteno()'></td>";
+			str += "<td><input type='submit' value='검색' onclick='searchComment()'></td>"
+			str += "<td><input type='submit' value='수정' onclick='editnoComment()'></td>"
+			str += "<td><input type='submit' value='삭제' onclick='deletenoComment()'></td>";
 			str += "</tr>"
 			str += "<tr>"
 			str += "<td>선택</td>"
@@ -341,51 +332,41 @@
 	}
 	
 	// 정렬기능 NO or ID
-	function sortwhat(){
+	function sortwhatComment(){
 		var what = $("#which option:selected").val().trim();
 		if(what == "no"){
 			var no = "no";
-			sortFeed(no);
 			sortComment(no);
 		}
 		else if(what == "id"){
 			var id = "id";
-			sortFeed(id);
 			sortComment(id);
 		}
 	}
 	
 	// 정렬기능2 ASC or DESC
-	function sortFeed(which){
-		var ascdesc = $("#ascdesc option:selected").val();
-		var url = "jsp/feedListsort.jsp?which=" + which + "&ascdesc=" + ascdesc;
-		AJAX.call(url, null, function(data){
-			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-			show(feeds); 
-		});
-	}
 	
 	function sortComment(which){
 		var ascdesc = $("#ascdesc option:selected").val();
 		var url = "jsp/commentListsort.jsp?which=" + which + "&ascdesc=" + ascdesc;
 		AJAX.call(url, null, function(data){
 			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-			show(feeds); 
+			show2(feeds); 
 		});
 	}
 	
 	// 검색기능
-	function search(){
+	function searchComment(){
 		var id = $("#search").val();
-		var url = "jsp/feedSearch.jsp?id=" + id;
+		var url = "jsp/commentSearch.jsp?id=" + id;
 		AJAX.call(url, null, function(data){
 			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-			show(feeds); 
+			show2(feeds); 
 		});
 	}
 	
 	// 수정기능
-	function editno(){
+	function editnoComment(){
 		var editno = $(':radio[name="editno"]:checked').val();
 
 		if(editno == ""){
@@ -393,20 +374,20 @@
 			$("#editno").focus();
 			return;
 		}
-		editpage(editno);
+		editpageComment(editno);
 	}
 	
-	function editpage(editno){
-		var url = "jsp/feedEditpage.jsp?editno=" + editno;
+	function editpageComment(editno){
+		var url = "jsp/commentEditpage.jsp?editno=" + editno;
 		AJAX.call(url, null, function(data){
 			var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
-			showedit(feeds); 
+			showeditComment(feeds); 
 		});
 	}
 
-	function showedit(feeds){
+	function showeditComment(feeds){
 		console.log(feeds);
-			str = "<tr><td colspan=6 align=center>가입자 수정 페이지 </td></tr>"
+			str = "<tr><td colspan=6 align=center>후기 수정 페이지 </td></tr>"
 			str += "<tr>"
 			str += "<td>번호</td>"
 			str += "<td>아이디</td>"
@@ -414,7 +395,7 @@
 			str += "<td>내용</td>"
 			str += "<td>이미지파일</td>"
 			str += "<td>업로드된 시간</td>"
-			str += "<td rowspan=3><input type='submit' value='수정하기' onclick='edit()'></td>";
+			str += "<td rowspan=3><input type='submit' value='수정하기' onclick='editComment()'></td>";
 			str += "</tr>"
 		for(var i=0; i<feeds.length; i++){
 			str += "<tr>";
@@ -434,7 +415,7 @@
 	
 
 
-	function edit(){
+	function editComment(){
 		
 		var no = $("#no").val().trim();
 		var id = $("#id").val().trim();
@@ -460,7 +441,7 @@
 		var params = {id: id, jsonstr: JSON.stringify(usrobj)};
 		
 		
-		var url = "jsp/userEdit.jsp";
+		var url = "jsp/McommentEdit.jsp?no=" + no;
 		AJAX.call(url, params, function(data){
 			var code = data.trim();
 			if(code == "OK"){
@@ -475,18 +456,18 @@
 
 
 	// 삭제기능 
-	function deleteno(){
+	function deletenoComment(){
 		var deleteno = $(':radio[name="editno"]:checked').val();
 		if(deleteno == ""){
 			alert("수정할 회원을 선택해주세요.");
 			$("#editno").focus();
 			return;
 		}
-		deleteuser(deleteno);
+		deleteuserComment(deleteno);
 	}
 
-	function deleteuser(deleteno){
-		var url = "jsp/feedDelete.jsp?deleteno=" + deleteno;
+	function deleteuserComment(deleteno){
+		var url = "jsp/commentDelete.jsp?deleteno=" + deleteno;
 		AJAX.call(url, null, function(data){
 			var code = data.trim();
 			if(code == "OK"){
