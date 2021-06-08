@@ -2,6 +2,7 @@
 <%@ page import ="dao.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
-	String str = (new FeedDAO()).myCommentList();
+	String uid = (String) session.getAttribute("id");
+	String str = (new FeedDAO()).myCommentList(uid);
 	out.print(str);
 %>

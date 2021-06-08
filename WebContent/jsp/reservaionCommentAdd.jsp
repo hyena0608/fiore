@@ -23,7 +23,8 @@
 		if(item.isFormField()){
 			String value = item.getString("utf-8");
 			if(name.equals("jsonstr")) {
-				jsonstr = value;// jsonstr에서 id를 뽑아낼 수 있다.
+				jsonstr = value;
+				// jsonstr에서 id를 뽑아낼 수 있다.
 				/*String uid = (String)session.getAttribute("id");
 				JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
 				jsonobj.put("id", uid);

@@ -239,7 +239,7 @@
 		});
 	}
 	
-	hide2 = -1;
+	var hide2 = -1;
 	function uploadtable(){
 		if(hide2 == -1){
 			var str = "";
@@ -261,7 +261,8 @@
 	}
 	
 	/* 업로드 관련 */
-	function upload(){
+function upload(){
+		
 	var id = $("#id").val().trim();
 	if(id == ""){
 		alert("아이디를 입력해 주세요");
@@ -284,6 +285,7 @@
 	}
 	
 	var imgobj = $("#image")[0].files[0];
+	/* var jsonobj = {id: id, title: title, content: content, ts: getTime()}; */
 	var jsonobj = {id: id, title: title, content: content, ts: getTime()};
 	if(imgobj != null){
 		jsonobj.images = [imgobj.name];
@@ -303,34 +305,34 @@
 		}
 		else{
 			alert("작성 글의 업로드가 완료되었습니다.");
-			window.location.href = "onedayclass.html";
+			comment();
 		}
 	}, true);
-	}
+	
+}
 	
 	function getToday(){
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = ("0" + (1 + date.getMonth())).slice(-2);
-	var day = ("0" + date.getDate()).slice(-2);
-	return year + "-" + month + "-" + day;
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = ("0" + (1 + date.getMonth())).slice(-2);
+		var day = ("0" + date.getDate()).slice(-2);
+		return year + "-" + month + "-" + day;
 	}
 	
 	function getTime(){
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = ("0" + (1 + date.getMonth())).slice(-2);
-	var day = ("0" + date.getDate()).slice(-2);
-	
-	var hour = ("0" + date.getHours()).slice(-2);
-	var min = ("0" + date.getMinutes()).slice(-2);
-	var sec = ("0" + date.getSeconds()).slice(-2);
-	
-	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = ("0" + (1 + date.getMonth())).slice(-2);
+		var day = ("0" + date.getDate()).slice(-2);
+		
+		var hour = ("0" + date.getHours()).slice(-2);
+		var min = ("0" + date.getMinutes()).slice(-2);
+		var sec = ("0" + date.getSeconds()).slice(-2);
+		
+		return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
 	}
 	
-	
-	hide3 = -1;
+	var hide3 = -1;
 	function showseller(){
 			if(hide3 == -1){
 			var users;
@@ -370,6 +372,5 @@
 			str += "</tr>";
 		}
 		$("#list2").html(str);
-	}
-
+	}	
 </script>

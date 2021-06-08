@@ -95,12 +95,13 @@ public class FeedDAO {
 		}
 	}
 	
-	public String myCommentList() throws NamingException, SQLException {
+	public String myCommentList(String uid) throws NamingException, SQLException {
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;	
 		try {
-			stmt = conn.prepareStatement("select jsonstr from comment");
+			stmt = conn.prepareStatement("select jsonstr from comment where id = ?");
+			stmt.setString(1, uid);
 			rs = stmt.executeQuery();
 			
 			String str = "[";
