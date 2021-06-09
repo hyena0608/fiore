@@ -40,7 +40,7 @@ function show(feeds){
 	console.log(feeds);
 		str = "<tr><td colspan=7 align=center>내가 작성한 글</td>";
 		str += "<td><input type='submit' value='수정' onclick='editno()'></td>";
-		str += "<td><input type='submit' value='삭제' onclick='deleteno()'></td>";
+		str += "<td><input type='submit' value='삭제' onclick='delete()'></td>";
 		str += "</tr>";
 		str += "<tr>";
 		str += "<td>선택</td>";
@@ -155,30 +155,5 @@ function edit(){
 	}, true);
 }
 
-
-// 삭제기능 
-	function deleteno(){
-		var deleteno = $(':radio[name="editno"]:checked').val();
-		if(deleteno == ""){
-			alert("삭제할 게시글을 선택해주세요.");
-			$("#editno").focus();
-			return;
-		}
-		deleteuser(deleteno);
-	}
-
-	function deleteuser(deleteno){
-		var url = "jsp/commentDelete.jsp?deleteno=" + deleteno;
-		AJAX.call(url, null, function(data){
-			var code = data.trim();
-			if(code == "OK"){
-				alert("삭제완료 되었습니다.");
-				window.location.href = "myfeed.html";
-			}
-			else{
-				alert("오류가 발생하였습니다.");
-			}
-		}, false);
-	}
 
 </script>

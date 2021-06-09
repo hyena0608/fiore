@@ -3,6 +3,6 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	String uid = (String) session.getAttribute("id");
-	String str = (new FeedDAO()).myCommentList(uid);
+	String str = (new FeedDAO()).commentList(uid);
 	out.print(str);
 %>

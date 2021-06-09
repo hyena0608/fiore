@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>Fiore</title>
+<style>
+	.p{
+	font-size:1.5em;
+	font-weight:bold;
+	font-family:"HY헤드라인M";
+	}
+	.drop .hide{display:none;}
+</style>
+</head>
+
+<body>
+	<div class="page-hdr"> Fiore </div>
+	<div class="page-body">
+	<ul class="page-mnu">
+    	<li><a href="main.html">HOME</a></li>
+    	<li style="background-color:lightgreen"><a href="reservation.html">꽃다발 예약</a></li>
+    	<li><a href="onedayclass.html">원데이 클래스</a></li>
+    	<li><a href="notice.html">공지사항</a></li>
+    	<li><a href="mypage.html">마이 페이지</a></li>
+    </ul>
+    <div class="section pad-24 mtop-30">
+	<div><span class="p">후기</span> 둘러보기</div><br>
+ 	<div onclick="comment()" style="color:darkgray"> > 후기</div>
+ 	   <table id="list"></table>
+ 	   <div class="button" onclick="getNext()">후기글 더보기</div>
+ 	   <br>
+ 	 </div>
+ 	 </div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+	$(document).ready(function(){
+		Page.init();
+		comment()
+	});
+
+	var minNo = -1;
+	var hide = -1;
+	function comment(){
+		if (hide == -1){
+			var str = "<div style='color:darkgray' onclick='uploadtable()';>> 후기 작성</div><br><div id='commentAdd'></div>";
+			$("#list").html(str);
+			AJAX.call("jsp/getGroupComment.jsp", null, function(data){
+				var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+				if(feeds.length > 0){
+					minNo = feeds[feeds.length - 1].no;
+				}
+				show(feeds);
+			});
+			hide = 0;
+		}else{
+			$("#list").html("");
+			hide = -1;
+		}
+	}
+	
+	var showfeeds;
+	function show(feeds){
+		showfeeds = -1;
+		var str = "";
+		for(var i=0; i<feeds.length; i++){
+			var img = feeds[i].images, imgstr = "";
+			if(img != null){
+				imgstr = "<img src='images/" + img + "'width=100%>";
+			}
+			str += "<tr><td colspan=3><hr></td></tr>";
+			str += "<tr>";
+			str += "<td>" + feeds[i].id + "</td>";
+			str += "<td>" + feeds[i].title + "</td>";
+			str += "<td><small>(" + feeds[i].ts + ")</small></td>";
+			str += "</tr>";
+			str += "<tr><td colspan=3>" + imgstr + "</td></tr>";
+			str += "<tr><td colspan=3>" + feeds[i].content + "</td></tr>";
+		}
+		$("#list").append(str); // <table id="list">에 들어가게 됨
+	}
+
+	function getNext(){
+		var params = {maxNo: minNo};
+		AJAX.call("jsp/getGroupComment.jsp", params, function(data){
+			var feeds = JSON.parse(data.trim());
+			if (feeds.length > 0){ 
+				minNo = feeds[feeds.length - 1].no;
+			}else{
+				alert("더이상 후기글이 없습니다.");
+			}
+			show(feeds);
+		});
+	}
+	
+	hide2 = -1;
+	function uploadtable(){
+		if(hide2 == -1){
+			var str = "<div id='commentAdd'></div>";
+			str += "<div style='text-align:center;'>"
+			str += "<input type='text' id='id' placeholder='아이디 (이메일주소)'>"
+			str += "<input type='text' id='title' name='title' placeholder='제목을 입력해주세요'>"
+			str += "<textarea id='content' placeholder='내용을 입력해주세요.' rows='15' cols='30'></textarea>"
+			str += "<div style='color: gray'><small>이미지를 넣어주세요</small></div>"
+			str += "<input type='file' id='image'>"
+			str += "<br>"
+			str += "<input type='submit' value='업로드하기' onclick='upload()'>"
+			str += "</div>"
+			$("#commentAdd").html(str);
+			hide2 = 0;
+		}else{
+			$("#commentAdd").html("");
+			hide2 = -1;
+		}
+	}
+	
+	/* 업로드 관련 */
+	function upload(){
+	var id = $("#id").val().trim();
+	if(id == ""){
+		alert("아이디를 입력해 주세요");
+		$("#id").focus();
+		return;
+	}
+	
+	var title = $("#title").val().trim();
+	if(title == ""){
+		alert("제목을 입력해주세요");
+		$("#title").focus();
+		return;
+	}
+	
+	var content = $("#content").val().trim();
+	if(content == ""){
+		alert("작성글을 입력해주세요");
+		$("#content").focus();
+		return;
+	}
+	
+	var imgobj = $("#image")[0].files[0];
+	var jsonobj = {id: id, title: title, content: content, ts: getTime()};
+	if(imgobj != null){
+		jsonobj.images = [imgobj.name];
+	}
+	
+	var params = new FormData();
+	params.append("jsonstr", JSON.stringify(jsonobj));
+	if(imgobj != null){
+		params.append("image", imgobj);
+	}
+	
+	var url = "jsp/reservaionCommentAdd.jsp";
+	AJAX.call(url, params, function(data){
+		var code = data.trim();
+		if (code == "ER") {
+			alert("작성 글의 업로드 중 오류가 발생하였습니다.");
+		}
+		else{
+			alert("작성 글의 업로드가 완료되었습니다.");
+			window.location.href = "onedayclass.html";
+		}
+	}, true);
+	}
+	
+	function getToday(){
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	return year + "-" + month + "-" + day;
+	}
+	
+	function getTime(){
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	
+	var hour = ("0" + date.getHours()).slice(-2);
+	var min = ("0" + date.getMinutes()).slice(-2);
+	var sec = ("0" + date.getSeconds()).slice(-2);
+	
+	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+	}
+
+</script>
