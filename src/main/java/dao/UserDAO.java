@@ -66,6 +66,22 @@ public class UserDAO {
 			if(conn != null) conn.close();
 		}
 	}
+	
+	public boolean withdraw(String uid) throws NamingException, SQLException{
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement("delete from user where id = ?");
+			stmt.setString(1, uid);
+			int count = stmt.executeUpdate();
+			return (count == 1) ? true : false; 
+		}finally {
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
+	
 	public boolean delete(String deleteno) throws NamingException, SQLException{
 		Connection conn = ConnectionPool.get();
 		PreparedStatement stmt = null;

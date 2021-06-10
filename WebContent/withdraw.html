@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name=viewport content="width=device-width, initial-scale=1. user-scalable=0">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="css/core.css">
+		<title>Fiore</title>
+	</head>
+	<body>
+		<div class="page-hdr">Fiore</div>
+		<div class="page-body">
+		<div class="section pad-24 mtop-30">
+			<input id="id" class="mtop-10" type="text" name="id" placeholder="아이디(이메일 주소)">
+			<input type="submit" value="회원탈퇴" class="mtop-20" onclick="withdraw()">
+		</div>
+		<div class="page-footer"> Copyright: Fiore.com, 2021 </div>
+	</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function withdraw(){
+	var id = $("#id").val().trim();
+	if(id == ""){
+		alert("아이디를 입력해주세요.");
+		$("#id").focus();
+		return;
+	}
+	
+	var url = "jsp/withdraw.jsp?id=" + id;
+	AJAX.call(url, null, function(data){
+		var code = data.trim();
+		if(code == "NA"){
+			alert("존재하지 않는 아이디입니다.");
+		}
+		else if(code == "OK"){
+			alert("회원탈퇴 완료");
+		}
+		else if(code == "ER"){
+			alert("회원탈퇴 도중 오류가 발생하였습니다.");
+		}
+	}, false);
+	
+}
+</script>

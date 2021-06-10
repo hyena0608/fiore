@@ -5,9 +5,6 @@
 <%@ page import="org.apache.commons.fileupload.servlet.*" %>
 <%@ page import="dao.*" %>
 <%@ page import="util.*" %>
-<%@ page import="org.json.simple.JSONObject" %>
-<%@ page import="org.json.simple.parser.JSONParser" %>
-<%@ page import="org.json.simple.parser.ParseException" %>
 <%
 	// String uid = null, ucon = null, ufname = null;
 	String jsonstr = null, ufname = null;
@@ -22,17 +19,9 @@
 		String name = item.getFieldName();
 		if(item.isFormField()){
 			String value = item.getString("utf-8");
-			if(name.equals("jsonstr")) {
-				jsonstr = value;
-				// jsonstr에서 id를 뽑아낼 수 있다.
-				/*String uid = (String)session.getAttribute("id");
-				JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
-				jsonobj.put("id", uid);
-				jsonstr = jsonobj.toJSONString();
-				 JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
-				jsonobj.put("id", uid);
-				jsonstr = jsonobj.toJSONString(); */
-			}
+			// if(name.equals("id")) uid = value;
+			// else if(name.equals("content")) ucon = value;
+			if(name.equals("jsonstr")) jsonstr = value; // jsonstr에서 id를 뽑아낼 수 있다.
 		}
 		else{
 			if(name.equals("image")){
@@ -43,7 +32,6 @@
 			}
 		}
 	}
-	
 	FeedDAO dao = new FeedDAO();
 	if(dao.insertComment(jsonstr) == true) {
 		out.print("OK");
