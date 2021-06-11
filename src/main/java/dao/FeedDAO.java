@@ -178,20 +178,46 @@ public class FeedDAO {
 		try {
 			synchronized(this) { // 상호배제 동작하게 만들기
 				// no 값 받아오기
+				// phase 1. add "no" property --------------------------
 				String sql = "SELECT no FROM comment ORDER BY no DESC LIMIT 1";
 				stmt = conn.prepareStatement(sql);
 				rs = stmt.executeQuery();
 				
 				int max = (!rs.next()) ? 0 : rs.getInt("no");
-				stmt.close();
+				stmt.close(); rs.close();
 				
-				JSONObject jsonobj = (JSONObject) (new JSONParser()).parse(jsonstr);
+				JSONParser parser = new JSONParser();
+				JSONObject jsonobj = (JSONObject) parser.parse(jsonstr);
 				jsonobj.put("no", max + 1);
 				
+				// phase 2. add "user" property ----------------------------------
+				String uid = jsonobj.get("id").toString();
 				
+				sql = "SELECT jsonstr FROM user WHERE id = ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, uid);
+				rs = stmt.executeQuery();
+				
+				if(rs.next()) {
+					String usrstr = rs.getString("jsonstr");
+					JSONObject usrobj = (JSONObject) parser.parse(usrstr);
+					usrobj.remove("password");
+					usrobj.remove("ts");
+					usrobj.remove("userclass");
+					usrobj.remove("sex");
+					usrobj.remove("birth");
+					usrobj.remove("phonenum");
+					usrobj.remove("storeaddress");
+					usrobj.remove("storename");
+					usrobj.remove("no");
+					jsonobj.put("user", usrobj);
+				}
+				stmt.close(); rs.close();
+				
+				// phase 3.
 				stmt = conn.prepareStatement("insert into comment(no, id, jsonstr) values (?, ?, ?)");
 				stmt.setInt(1,  max + 1);
-				stmt.setString(2, jsonobj.get("id").toString());
+				stmt.setString(2, uid);
 				stmt.setString(3, jsonobj.toJSONString());
 				
 				int count = stmt.executeUpdate();

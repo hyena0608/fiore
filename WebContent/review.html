@@ -72,9 +72,13 @@ $(document).ready(function(){
 			if(img != null){
 				imgstr = "<img src='images/" + img + "'width=100%>";
 			}
+			var name = feeds[i].id;
+			if (feeds[i].user != null){
+				name = feeds[i].user.name;
+			}
 			str += "<tr><td colspan=3><hr></td></tr>";
 			str += "<tr>";
-			str += "<td>" + feeds[i].id + "</td>";
+			str += "<td>" + name + "</td>";
 			str += "<td>" + feeds[i].title + "</td>";
 			str += "<td><small>(" + feeds[i].ts + ")</small></td>";
 			str += "</tr>";
