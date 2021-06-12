@@ -68,13 +68,32 @@ function show(feeds){
 		if(img != null){
 			imgstr = "<img src='images/" + img + "'width=100%>";
 		}
-		str += "<tr><td colspan=2><hr></td></tr>";
+		var name = feeds[i].id;
+		if (feeds[i].user != null){
+			name = feeds[i].user.name;
+		}
+		var phonenum = '미등록';
+		if (feeds[i].user != null){
+			phonenum = feeds[i].user.phonenum;
+		}
+		var storeaddress = '미등록';
+		if (feeds[i].user != null){
+			storeaddress = feeds[i].user.storeaddress;
+		}
+		var storename = '미등록';
+		if (feeds[i].user != null){
+			storename = feeds[i].user.name;
+		}
+		str += "<tr><td colspan=5><hr></td></tr>";
 		str += "<tr>";
-		str += "<td>" + feeds[i].title + "</td>";
-		str += "<td>" + feeds[i].ts + "</td>";
+		str += "<td><b>" + feeds[i].title + "</b></td>";
+		str += "<td><small>" + feeds[i].ts + "</small></td>";
 		str += "</tr>";
 		str += "<tr><td colspan=2>" + imgstr + "</td></tr>";
 		str += "<tr><td colspan=2>" + feeds[i].content + "</td></tr>";
+		str += "<tr><td colspan=2 style='text-align:right'> 전화번호 : " + phonenum + "</td>";
+		str += "<tr><td colspan=2 style='text-align:right'> 가게 주소 : " + storeaddress + "</td>";
+		str += "<tr><td colspan=2 style='text-align:right'> 가게 이름 :" + storename + "</td>";
 	}
 	$("#list").append(str); // <table id="list">에 들어가게 됨
 }

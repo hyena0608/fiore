@@ -106,11 +106,11 @@ $(document).ready(function(){
 		if(hide2 == -1){
 			var str = "<div id='commentAdd'></div>";
 			str += "<div style='text-align:center;'>"
-			str += "<input type='text' id='id' name='id' placeholder='아이디 (이메일주소)'>"
-			str += "<input type='text' id='title' name='title' placeholder='제목을 입력해주세요'>"
-			str += "<textarea id='content' placeholder='내용을 입력해주세요.' rows='15' cols='30'></textarea>"
+			str += "<input type='text' id='id' name='id' placeholder='아이디 (이메일주소)' style='margin-bottom:5px'>"
+			str += "<input type='text' id='title' name='title' placeholder='제목을 입력해주세요'style='margin-bottom:5px'>"
+			str += "<textarea id='content' placeholder='내용을 입력해주세요.' rows='15' cols='30' style='margin-bottom:5px; width:100%'></textarea>"
 			str += "<div style='color: gray'><small>이미지를 넣어주세요</small></div>"
-			str += "<input type='file' id='image'>"
+			str += "<input type='file' id='image' style='margin-bottom:5px'>"
 			str += "<br>"
 			str += "<input type='submit' value='업로드하기' onclick='upload()'>"
 			str += "</div>"

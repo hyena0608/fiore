@@ -61,7 +61,7 @@ body {
 .page-body input {
     float: left;
     width: 100%;
-    padding: 0 16px;
+    padding: 5px 16px;
     box-sizing: border-box;
     line-height: 46px;
     font-size: 1.0em;
