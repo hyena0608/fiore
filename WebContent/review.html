@@ -30,7 +30,7 @@
 	<div><span class="p">후기</span> 둘러보기</div><br>
  	<div onclick="comment()" style="color:darkgray"> > 후기</div>
  	   <table id="list"></table>
- 	   <div class="button" onclick="getNext()">후기글 더보기</div>
+ 	  <!-- <div class="button" onclick="getNext()">후기글 더보기</div> -->
  	   <br>
  	 </div>
  	 </div>
@@ -190,4 +190,11 @@ function getTime(){
 	
 	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
 }
+
+// 스크롤
+$(window).scroll(function(){
+    if($(window).scrollTop() >= $(document).height() - $(window).height()){
+       	getNext();
+    } 
+});
 </script>

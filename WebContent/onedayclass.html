@@ -37,7 +37,7 @@
 	- 예약 가능 인원<br>
 	1-3명<br>
 	- 예약 문의<br>  메세지창 연결 및 위의 내용 관리자 연동 되게 변경 -->
-	<div class="button" onclick="getNext()">작성글 더보기</div>
+	<!-- <div class="button" onclick="getNext()">작성글 더보기</div>  -->
 	</div>
 	</div>
 </body>
@@ -110,4 +110,13 @@ function getNext(){
 		show(feeds);
 	});
 }
+
+// 안드로이드 . 아이폰 값은 찾자
+$(window).scroll(function(){
+    if($(window).scrollTop() >= $(document).height() - $(window).height()){
+       	getNext();
+    } 
+});
+
+
 </script>

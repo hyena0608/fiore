@@ -40,3 +40,8 @@ a:link{
 a:visited{
 	color:black;
 	text-decoration-line: none;}
+	
+.mobile {
+	overflow-y: auto;
+	width: 300px;
+	height: 100px;}
