@@ -66,6 +66,7 @@
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="js/core.js"></script>
 <script>
+var loginOK = 0;
 function login() { 
 	var id = $("#id").val().trim();
 	if(id == ""){
@@ -94,9 +95,11 @@ function login() {
 			window.location.href = "main.html";
 		}
 	});
+	setCookie("id", id, 1)
 }
 
 function logout(){
+	loginOK = 0;
 	window.location.href = "jsp/logout.jsp";
 }
 
@@ -106,5 +109,14 @@ function myfeed(){
 
 function withdraw(){
 	window.location.href = "withdraw.html";
+}
+
+// 아이디 쿠키
+function setCookie(cName, cValue, cDay){
+  var expire = new Date();
+     expire.setDate(expire.getDate() + cDay);
+     cookies = cName + '=' + escape(cValue) + '; path=/ '; // 한글 깨짐을 막기위해 escape(cValue)를 합니다.
+     if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+     document.cookie = cookies;
 }
 </script>

@@ -104,8 +104,6 @@ function getNext(){
 		var feeds = JSON.parse(data.trim());
 		if (feeds.length > 0){
 			minNo = feeds[feeds.length - 1].no;
-		}else{
-			alert("더이상 작성글이 없습니다.");
 		}
 		show(feeds);
 	});
@@ -113,7 +111,7 @@ function getNext(){
 
 // 안드로이드 . 아이폰 값은 찾자
 $(window).scroll(function(){
-    if($(window).scrollTop() >= $(document).height() - $(window).height()){
+    if($(window).scrollTop() >= $(".page-body").height() - $(window).height()){
        	getNext();
     } 
 });

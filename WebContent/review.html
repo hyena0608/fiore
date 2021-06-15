@@ -17,8 +17,8 @@
 </head>
 
 <body>
-	<div class="page-hdr"> Fiore </div>
-	<div class="page-body">
+	<div class="page-hdr""> Fiore </div>
+	<div class="page-body" id=''>
 	<ul class="page-mnu">
     	<li><a href="main.html">HOME</a></li>
     	<li style="background-color:lightgreen"><a href="reservation.html">꽃다발 예약</a></li>
@@ -94,8 +94,6 @@ $(document).ready(function(){
 			var feeds = JSON.parse(data.trim());
 			if (feeds.length > 0){ 
 				minNo = feeds[feeds.length - 1].no;
-			}else{
-				alert("더이상 후기글이 없습니다.");
 			}
 			show(feeds);
 		});
@@ -106,7 +104,7 @@ $(document).ready(function(){
 		if(hide2 == -1){
 			var str = "<div id='commentAdd'></div>";
 			str += "<div style='text-align:center;'>"
-			str += "<input type='text' id='id' name='id' placeholder='아이디 (이메일주소)' style='margin-bottom:5px'>"
+			str += "<input type='hidden' id='id' name='id' placeholder='아이디 (이메일주소)' style='margin-bottom:5px'>"
 			str += "<input type='text' id='title' name='title' placeholder='제목을 입력해주세요'style='margin-bottom:5px'>"
 			str += "<textarea id='content' placeholder='내용을 입력해주세요.' rows='15' cols='30' style='margin-bottom:5px; width:100%'></textarea>"
 			str += "<div style='color: gray'><small>이미지를 넣어주세요</small></div>"
@@ -124,12 +122,13 @@ $(document).ready(function(){
 	
 	/* 업로드 관련 */
 	function upload(){
-	var id = $("#id").val().trim();
+	var id = getCookie('id');
+	/*var id = $("#id").val().trim();
 	if(id == ""){
 		alert("아이디를 입력해 주세요");
 		$("#id").focus();
 		return;
-	}
+	}*/
 	
 	var title = $("#title").val().trim();
 	if(title == ""){
@@ -193,8 +192,31 @@ function getTime(){
 
 // 스크롤
 $(window).scroll(function(){
-    if($(window).scrollTop() >= $(document).height() - $(window).height()){
+	if($(window).scrollTop() >= $(".page-body").height() - $(window).height()){
        	getNext();
     } 
 });
-</script>
+
+출처: https://j07051.tistory.com/505 [흘러간다...]
+
+// 쿠키 id
+function getCookie(cName) {
+    cName = cName + '=';
+    var cookieData = document.cookie;
+    var start = cookieData.indexOf(cName);
+    var cValue = '';
+    if(start != -1){
+        start += cName.length;
+        var end = cookieData.indexOf(';', start);
+        if(end == -1)end = cookieData.length;
+        cValue = cookieData.substring(start, end);
+    }
+    return unescape(cValue);
+}
+
+function getId(){
+	id = getCookie('id');  //id라는 이름의 쿠키를 가져온다.
+	var str = "";
+	str += "<tr><td>" + id + "</td></tr>"; 
+	$("#list").append(str);
+}</script>

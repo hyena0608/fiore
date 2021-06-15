@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>Fiore</title>
+<style>
+
+</style>
+</head>
+
+<body>
+	<table id="list"></table>
+	<button onclick='getId()'>click</button>
+</body>
+
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+var id = "";
+$(document).ready(function(){
+	Page.init();
+});
+
+
+
+function getCookie(cName) {
+    cName = cName + '=';
+    var cookieData = document.cookie;
+    var start = cookieData.indexOf(cName);
+    var cValue = '';
+    if(start != -1){
+        start += cName.length;
+        var end = cookieData.indexOf(';', start);
+        if(end == -1)end = cookieData.length;
+        cValue = cookieData.substring(start, end);
+    }
+    return unescape(cValue);
+}
+
+function getId(){
+	id = getCookie('id');  //id라는 이름의 쿠키를 가져온다.
+	var str = "";
+	str += "<tr><td>" + id + "</td></tr>"; 
+	$("#list").append(str);
+}
+
+
+</script>
