@@ -1,5 +1,7 @@
 <%@ page contentType="text/html" pageEncoding="utf-8" %>
 <%@ page import="dao.*" %>
+<%@ page import="java.io.PrintWriter" %>
+
 <%
 	request.setCharacterEncoding("utf-8");
 	String uid = request.getParameter("id");

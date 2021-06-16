@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/core.css">
+<title>Fiore</title>
+<style>
+	.p{
+	font-size:1.5em;
+	font-weight:bold;
+	font-family:"HY헤드라인M";
+	}
+</style>
+</head>
+<body>
+	<div class="page-hdr"> Fiore </div>
+	<div class="page-body">
+	<ul class="page-mnu">
+    	<li><a href="main.html">HOME</a></li>
+    	<li><a href="reservation.html">꽃다발 예약</a></li>
+    	<li><a href="onedayclass.html">원데이 클래스</a></li>
+    	<li><a href="notice.html">공지사항</a></li>
+    	<li style="background-color:lightgreen"><a href="mypage.html">마이 페이지</a></li>
+    </ul>
+
+  	<div class="section pad-24 mtop-30">
+  	<div><a href="mypage.html"><span class="p">내</span></a> 정보</div><br>
+
+	<table border="1" id="myinfo"></table><br>
+	<div onclick="withdraw()"> > 회원 탈퇴</div><br>
+	<a href="mailto:hellomstars@daum.net?subject=FIORE 회원정보 변경"> > 회원 정보 변경</a><br>
+	</div>
+	</div>
+	
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function(){
+	Page.init(start);
+});
+
+function start(uid){
+	AJAX.call("jsp/myinf.jsp", null, function(data){
+		var feeds = JSON.parse(data.trim()); // 스트링을 객체 형태로 바꿈, 배열이 된다.
+		show(feeds); 
+	});
+}
+
+function show(feeds){
+	console.log(feeds);
+		str = "<tr><td colspan=8 align=center>내 정보</td>";
+		str += "</tr>";
+		str += "<tr>";
+		str += "<td>아이디</td>";
+		str += "<td>비밀번호</td>";
+		str += "<td>이름</td>";
+		str += "<td>성별</td>";
+		str += "<td>생년월일</td>";
+		str += "<td>전화번호</td>";
+		str += "<td>가게 이름</td>";
+		str += "<td>가게 주소</td>";
+		str += "</tr>";
+	for(var i=0; i<feeds.length; i++){
+		str += "<tr>";
+		str += "<td>" + feeds[i].id + "</td>";
+		str += "<td>" + feeds[i].password + "</td>";
+		str += "<td>" + feeds[i].name + "</td>";
+		str += "<td>" + feeds[i].sex + "</td>";
+		str += "<td>" + feeds[i].birth + "</td>";
+		str += "<td>" + feeds[i].phonenum + "</td>";
+		str += "<td>" + feeds[i].storename + "</td>";
+		str += "<td>" + feeds[i].storeaddress + "</td>";
+		str += "</tr>";
+	}
+	$("#myinfo").html(str);
+}
+
+function withdraw(){
+	window.location.href = "withdraw.html";
+}
+</script>

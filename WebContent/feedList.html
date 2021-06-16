@@ -7,17 +7,13 @@
 	<link rel="stylesheet" href="css/core.css">
 	<title>Fiore</title>
 	<style>
-		body{
-			font-size:1.5em;
-			font-weight:bold;
-			font-family:"HY헤드라인M";
-		}
-		
 		table{
 			text-align:center;
 			margin:auto;
 			border: 2px solid black;
 		    border-radius: 4px;
+		    font-weight:bold;
+		    font-family:"HY헤드라인M";
 		}
 		select{
 			float: left;
@@ -36,7 +32,14 @@
 </head>
 <body>
 <div class="page-hdr"> Fiore </div>
-	<div class="page-body">
+		<div class="page-body">
+	<ul class="page-mnu">
+    	<li><a href="main.html">HOME</a></li>
+    	<li><a href="reservation.html">꽃다발 예약</a></li>
+    	<li><a href="onedayclass.html">원데이 클래스</a></li>
+    	<li><a href="notice.html">공지사항</a></li>
+    	<li style="background-color:lightgreen"><a href="mypage.html">마이 페이지</a></li>
+    </ul>
 		<div style='width:20%; margin-left: auto; margin-right: auto; padding-bottom: 50px'>
 			<select id='what' name='what'>
 				<option value='oneday'>원데이 클래스 관리</option>

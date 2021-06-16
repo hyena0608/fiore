@@ -272,4 +272,28 @@ public class UserDAO {
 			if(conn != null) conn.close();
 		}
 	}
+	//³» Á¤º¸
+	public String myInfo(String uid) throws NamingException, SQLException {
+		Connection conn = ConnectionPool.get();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;	
+		try {
+			stmt = conn.prepareStatement("select jsonstr from user where id = ?");
+			stmt.setString(1, uid);
+			rs = stmt.executeQuery();
+			
+			String str = "[";
+			int cnt = 0;
+			while(rs.next()) {
+				if(cnt ++ > 0) str += ", ";
+				str += rs.getString("jsonstr");
+			}
+			return str + "]";
+			
+		}finally {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(conn != null) conn.close();
+		}
+	}
 }

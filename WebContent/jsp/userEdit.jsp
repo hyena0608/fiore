@@ -4,10 +4,11 @@
 	request.setCharacterEncoding("utf-8");
 	
 	String uid = request.getParameter("id");
+	String userclass = request.getParameter("userclass");
 	String jsonstr = request.getParameter("jsonstr");
 	
-	FeedDAO dao = new FeedDAO();
-	if(dao.edit(uid, jsonstr) == true){
+	UserDAO dao = new UserDAO();
+	if(dao.edit(uid, userclass, jsonstr) == true){
 		out.print("OK");
 	}
 	else{
